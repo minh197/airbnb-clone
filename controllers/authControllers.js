@@ -14,3 +14,12 @@ const token = await  user.generateToken();
 
 res.json({status: "okeee", data: {user: user, token: token}})
 }
+
+
+exports.loginFacebook = async()=>{
+
+}
+
+exports.facebookAuthHandler = async ()=>{
+    
+}

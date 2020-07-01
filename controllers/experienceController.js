@@ -1,7 +1,7 @@
 
 const Exp = require("../models/experience")
 const Tag = require("../models/tag")
-
+const {deleteOne,updateOne} = require("./handlerFactory")
 exports.getExperiences = async (req,res,next) =>{
 
     const exps = await Exp.find()
@@ -13,15 +13,23 @@ exports.getExperiences = async (req,res,next) =>{
    res.json({status: "ok", data: exps})
 }
 
-exports.createExperience = async(req,res,next) =>{
+const catchAsync = require("../utils/catchAsync")
+const AppError = require("../utils/appError")
 
-    try{
+
+
+exports.createExperience =catchAsync(async(req,res,next) =>{
+
+  
         const {title, description, tags} = req.body
 
         if(!title || !description || !tags){
-            return res.status(400).json({status: "fail",
-             error: "title, description, tags are required"})
-        }
+
+            next(new AppError(400,"title, description, tags are required"))
+            
+        };
+
+        
     const newArr = await Tag.convertToObject(tags)
     console.log(newArr)
         const exp = await Exp.create({title,
@@ -29,10 +37,9 @@ exports.createExperience = async(req,res,next) =>{
               tags: newArr,
             host: req.user._id})
         res.status(201).json({status: "ok", data: exp})
-    }
-    catch(err){
-        console.log(err)
-        res.send("errorr")
-    }
+    
    
-}
+}) 
+
+exports.deleteExperience = deleteOne(Exp);
+exports.updateExperience = updateOne(Exp);
