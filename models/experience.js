@@ -26,7 +26,18 @@ const schema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: "Tag",
         required: true
-    }]
+    }],
+    averageRating:{
+        type:Number,
+        default:0,
+        min:0,
+        max:5
+    },
+    nRating:{
+        type:Number,
+        default:0
+      
+    }
 },
 {
     timesstamps: true,
@@ -36,15 +47,8 @@ const schema = new mongoose.Schema({
 
 
 
-// schema.pre("save", async function(next){
+//middleware for post (save)
 
-//     let arr=[...this.tags] // array of strings
 
-//     let foo= arr.map( async e=> await Tag.findOne({tag: e.toLowerCase().trim()}))
-
-//     let result = Promise.all(foo)
-//     this.tags = result
-//     next()
-// })
 
 module.exports = mongoose.model("Exp", schema)

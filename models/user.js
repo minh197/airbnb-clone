@@ -24,8 +24,8 @@ const schema = new mongoose.Schema({
     },
     
         password: {
-            type:String,
-            required: [true, "Password is required"]
+            type:String
+          
         },
         tokens: [String],
         type: {
@@ -81,6 +81,17 @@ schema.methods.toJSON = function(){
     delete obj.tokens;
     delete obj.id;
     return obj
+}
+
+schema.statics.findOneOrCreate = async function ({ email, name }) {
+    // `this` refers to User model
+    let user = await this.findOne({ email });
+    if(!user){
+        user = await this.create({ 
+            email: email, name: name
+        })
+    }
+    return user
 }
 
 module.exports = mongoose.model("User", schema)
